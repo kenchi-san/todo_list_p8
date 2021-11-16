@@ -72,6 +72,12 @@
         "symfony/polyfill-php56": "*"
     },
     "scripts": {
+        "reset": [
+            "symfony console d:d:d --force --if-exists",
+            "symfony console d:d:c",
+            "symfony console d:m:m -n",
+            "symfony console d:f:l -n"
+        ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"

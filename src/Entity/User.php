@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -13,11 +12,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface
 {
 
-public function __construct()
-{
-    $this->roles = "ROLE_USER";
-}
-
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        $this->roles = ["ROLE_USER"];
+    }
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -28,25 +29,23 @@ public function __construct()
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
-     * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
+     * @ORM\Column(type="string", length=255)
      */
-    private $email;
+    private ?string $email;
 
     public function getId(): ?int
     {
@@ -60,7 +59,7 @@ public function __construct()
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return $this->username;
     }
 
     public function setUsername(string $username): self
@@ -73,14 +72,16 @@ public function __construct()
     /**
      * @see UserInterface
      */
-    public function getRoles():self
+    public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        return $this;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setRoles($roles): self
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -101,15 +102,7 @@ public function __construct()
 
         return $this;
     }
-    public function getEmail()
-    {
-        return $this->email;
-    }
 
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
@@ -128,5 +121,17 @@ public function __construct()
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
     }
 }

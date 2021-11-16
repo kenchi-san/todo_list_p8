@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserContoller extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
@@ -24,7 +24,7 @@ class UserContoller extends AbstractController
     }
 
     /**
-     * @Route("/users/create", name="user_create")
+     * @Route("/users/create", name="app_user_create")
      */
     public function createAction(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
@@ -41,14 +41,14 @@ class UserContoller extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_user_list');
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * @Route("/users/{id}/edit", name="app_user_edit")
      */
     public function editAction(User $user, Request $request,UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -58,7 +58,6 @@ class UserContoller extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($user,$user->getPassword());
-//            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
