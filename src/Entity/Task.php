@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
@@ -15,6 +15,7 @@ class Task
         $this->isDone = true;
         $this->setCreatedAt(new \DateTimeImmutable());
     }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -41,6 +42,11 @@ class Task
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
+     */
+    private ?User $user;
 
     public function getId(): ?int
     {
@@ -94,8 +100,21 @@ class Task
 
         return $this;
     }
+
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }
