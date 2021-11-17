@@ -12,7 +12,8 @@ class Task
 {
     public function __construct()
     {
-        $this->isDone = false;
+        $this->isDone = true;
+        $this->setCreatedAt(new \DateTimeImmutable());
     }
     /**
      * @ORM\Id
