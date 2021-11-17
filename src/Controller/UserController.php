@@ -24,7 +24,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/create", name="app_user_create")
+     * @Route("users/create", name="app_user_create")
      */
     public function createAction(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
@@ -48,7 +48,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}/edit", name="app_user_edit")
+     * @Route("users/{id}/edit", name="app_user_edit")
      */
     public function editAction(User $user, Request $request,UserPasswordEncoderInterface $passwordEncoder)
     {

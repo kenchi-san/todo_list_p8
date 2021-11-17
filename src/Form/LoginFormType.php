@@ -14,13 +14,15 @@ class LoginFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username',TextType::class,['label' => "Nom d'utilisateur"])
+            ->add('userName',TextType::class,['label' => "Nom d'utilisateur"])
             ->add('password',PasswordType::class,['label' => "mot de passe"])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-
+        $resolver->setDefaults([
+            'csrf_token_id' => 'authenticate'
+        ]);
     }
 }
