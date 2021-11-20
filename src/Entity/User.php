@@ -14,19 +14,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
 
+
     /**
      * User constructor.
      */
     public function __construct()
     {
+        $this->tasks = new ArrayCollection();
         $this->roles = ["ROLE_USER"];
     }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -50,10 +53,10 @@ class User implements UserInterface
     private ?string $email;
 
     /**
-     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user",cascade="persist")
-     * @ORM\Column(type="string")
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
      */
     private $tasks;
+
 
     public function getId(): ?int
     {
@@ -89,7 +92,7 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles($roles): self
     {
         $this->roles = $roles;
 
@@ -128,7 +131,7 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+//         $this->plainPassword = null;
     }
 
     public function getEmail(): ?string
@@ -172,5 +175,6 @@ class User implements UserInterface
 
         return $this;
     }
+
 
 }

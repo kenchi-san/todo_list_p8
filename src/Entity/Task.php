@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
-use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
@@ -41,7 +41,7 @@ class Task
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private ?\DateTimeImmutable $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")

@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/login", name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -23,7 +23,7 @@ class SecurityController extends AbstractController
 
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        $form = $this->createForm(LoginFormType::class, ['username' => $lastUsername]);
+        $form = $this->createForm(LoginFormType::class, ['lastUsername' => $lastUsername]);
 
         return $this->render('security/login.html.twig', [
                 'form' => $form->createView(),

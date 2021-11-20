@@ -15,16 +15,16 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/users", name="app_user_list")
+     * @Route("admin/users", name="app_user_list")
      */
-    public function listAction(UserRepository $repository): Response
+    public function listAction(UserRepository $repository,UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $users = $repository->findAll();
         return $this->render('user/list.html.twig', ['users' => $users]);
     }
 
     /**
-     * @Route("users/create", name="app_user_create")
+     * @Route("/admin/users/create", name="app_user_create")
      */
     public function createAction(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
@@ -48,23 +48,23 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("users/{id}/edit", name="app_user_edit")
+     * @Route("admin/users/{id}/edit", name="app_user_edit")
      */
-    public function editAction(User $user, Request $request,UserPasswordEncoderInterface $passwordEncoder)
+    public function editAction(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $passwordEncoder->encodePassword($user,$user->getPassword());
+            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_user_list');
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);

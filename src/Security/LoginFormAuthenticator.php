@@ -25,7 +25,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'login';
 
     private EntityManagerInterface $entityManager;
     private UrlGeneratorInterface $urlGenerator;
@@ -77,6 +77,11 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         return $user;
     }
 
+    /**
+     * @param mixed $credentials
+     * @param UserInterface $user
+     * @return bool
+     */
     public function checkCredentials($credentials, UserInterface $user): bool
     {
         if (!$this->passwordEncoder->isPasswordValid($user, $credentials['password'])) {
