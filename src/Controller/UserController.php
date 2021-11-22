@@ -17,7 +17,7 @@ class UserController extends AbstractController
     /**
      * @Route("admin/users", name="app_user_list")
      */
-    public function listAction(UserRepository $repository,UserPasswordEncoderInterface $passwordEncoder): Response
+    public function listAction(UserRepository $repository): Response
     {
         $users = $repository->findAll();
         return $this->render('user/list.html.twig', ['users' => $users]);
@@ -49,6 +49,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("admin/users/{id}/edit", name="app_user_edit")
+     *
      */
     public function editAction(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {

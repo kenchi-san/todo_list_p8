@@ -12,11 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="app_task_list")
+     *
      */
     public function listAction(TaskRepository $repository): Response
     {
@@ -60,6 +62,7 @@ class TaskController extends AbstractController
 
         $form->handleRequest($request);
 
+        $this->denyAccessUnlessGranted('TASK_EDIT',$task);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
@@ -95,8 +98,9 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/delete/{id}", name="app_task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task): Response
     {
+        $this->denyAccessUnlessGranted('TASK_EDIT',$task);
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
