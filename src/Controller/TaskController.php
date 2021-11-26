@@ -3,16 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Task;
-use App\Entity\User;
-use App\Repository\TaskRepository;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -55,14 +53,21 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/edit/{id}", name="app_task_edit")
+     * @isGranted()
      */
     public function editAction(Task $task, Request $request)
     {
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
+        try {
+            $this->denyAccessUnlessGranted('TASK_EDIT', $task);
+        }
+      catch (\Exception $e){
+            $this->addFlash('error','acces interdit');
+          return $this->redirectToRoute('app_task_list');
+      }
 
-        $this->denyAccessUnlessGranted('TASK_EDIT',$task);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
@@ -100,7 +105,7 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): Response
     {
-        $this->denyAccessUnlessGranted('TASK_EDIT',$task);
+        $this->denyAccessUnlessGranted('TASK_EDIT', $task);
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
