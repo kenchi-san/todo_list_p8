@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskVoter extends Voter
 {
-
     const TASK_EDIT = 'TASK_EDIT';
 
     protected function supports($attribute, $subject): bool
