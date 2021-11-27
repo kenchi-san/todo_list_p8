@@ -70,9 +70,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['userName' => $credentials['userName']]);
-
         if (!$user) {
-            throw new UsernameNotFoundException('utilisateur non trouvé');
+            throw new CustomUserMessageAuthenticationException('utilisateur non trouvé');
         }
 
         return $user;
@@ -85,6 +84,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
      */
     public function checkCredentials($credentials, UserInterface $user): bool
     {
+
         if (!$this->passwordEncoder->isPasswordValid($user, $credentials['password'])) {
             throw new CustomUserMessageAuthenticationException('Mot de passe incorrect');
         }

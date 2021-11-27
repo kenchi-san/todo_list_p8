@@ -20,11 +20,9 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_task_list');
         }
         $error = $authenticationUtils->getLastAuthenticationError();
-
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $form = $this->createForm(LoginFormType::class, ['lastUsername' => $lastUsername]);
-
         return $this->render('security/login.html.twig', [
                 'form' => $form->createView(),
                 'last_username' => $lastUsername,
