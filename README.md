@@ -26,7 +26,10 @@ Don't forget to clean cache if you have any problem:
 ```
 php bin/console cache:clear
 ```
-
+```
+Don't forget to make your unit test each time you make a new function 
+Before to make your pull request on GitHub, make sur to running all unit tests
+```
 ## Running tests
 Load fixtures before launch tests.
 
