@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\LoginFormType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +14,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils,Request $request): Response
     {
         if ($this->getUser()) {
             $this->addFlash('warning', 'Vous êtes déjà connecté');
@@ -23,6 +24,7 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $form = $this->createForm(LoginFormType::class, ['lastUsername' => $lastUsername]);
+       $form->handleRequest($request);
         return $this->render('security/login.html.twig', [
                 'form' => $form->createView(),
                 'last_username' => $lastUsername,
@@ -32,6 +34,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/logout", name="app_logout")
+     * @codeCoverageIgnore
      */
     public function logout(): void
     {

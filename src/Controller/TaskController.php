@@ -95,7 +95,6 @@ class TaskController extends AbstractController
         } else {
             $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
         }
-
         return $this->redirectToRoute('app_task_list');
     }
 

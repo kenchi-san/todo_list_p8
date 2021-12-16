@@ -2,74 +2,91 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TaskControllerTest extends WebTestCase
 {
-    public function __construct()
-    {
-    }
+    use Login;
 
-    /**
-     * @dataProvider urlProvider
-     */
-    public function testPageIsSuccessfulWhenConnected($url, $expectedStatus)
+    public function setUp(): void
     {
 
-        $client = self::createClient();
-        $userRepository = $manager->getRepository(User::class);
-        $userRepository->findOneBy(['userName' => 'user0']);
-        $client->request('GET', $url);
-        $this->assertResponseStatusCodeSame($expectedStatus);
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
     }
 
-    public function urlProvider(): \Generator
+    public function testDeleteTaskActionWhenConnected()
     {
-        yield "login" => ['/login', 200];
-//        yield "homepage" => ['/', 200];
-//        yield "list tasks" => ['/tasks', 200];
-//        yield "task create" => ['/tasks/create', 200];
-//        yield "task edit" => ['/tasks/edit/1',302];
-//        yield "task toggle" => ['/tasks/toggle/1', 200];
-//        yield "task delete" => ['/tasks/delete/1', 302];
-//        yield "users list" => ['/admin/users', 403];
-//        yield "users create" => ['/admin/users/create', 403];
-//        yield "users edit" => ['/admin/users/1/edit', 403];
-//
+        $client = static::createClient();
+        $this->logIn($client);
+        $client->request('POST', '/tasks/delete/2');
+        self::assertResponseRedirects('/tasks', '302');
     }
 
-//    /**
-//     * @dataProvider urlProviderTest
-//     */
-//    public function testPageIsSuccessfullWhenNoConnected($url, $expectedStatus, $expectedRedirect = null)
-//    {
-//
-//        $client = self::createClient();
-//
-//
-//        $client->request('GET', $url);
-//
-//        $this->assertResponseStatusCodeSame($expectedStatus);
-//
-//        if ($expectedRedirect) {
-//            $this->assertResponseRedirects($expectedRedirect);
-//        }
-//    }
-//
-//    public function urlProviderTest()
-//    {
-//        yield "login" => ['/login', 200];
-//        yield "homepage" => ['/', 200];
-//        yield "list tasks" => ['/tasks', 200];
-//        yield "task create" => ['/tasks/create', 200];
-//        yield "task edit" => ['/tasks/edit/1',302];
-//        yield "task toggle" => ['/tasks/toggle/1', 200];
-//        yield "task delete" => ['/tasks/delete/1', 302];
-//        yield "users list" => ['/admin/users', 403];
-//        yield "users create" => ['/admin/users/create', 403];
-//        yield "users edit" => ['/admin/users/1/edit', 403];
+    public function testListAction()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('POST', '/tasks');
+        $this->assertResponseStatusCodeSame(200);
 
-//    }
+    }
+
+
+    public function testCreateActionWhenConneted()
+    {
+        $client = static::createClient();
+        $this->logIn($client);
+        $crawler = $client->request('POST', '/tasks/create');
+        $form = $crawler->selectButton("Ajouter")->form();
+        $form['task[title]'] = "titre";
+        $form['task[content]'] = "jrzjoghjlrzg lijrbgjo zrgj ojrzgh ojzrbg mojzrgjzr gkojrz bglkjzrbg lkjzrbgkljz";
+        $client->submit($form);
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful($message = 'Superbe ! La tâche a été bien été ajoutée.');
+    }
+
+    public function testEditActionWhenConnected()
+    {
+        $client = static::createClient();
+        $this->logIn($client);
+        $crawler = $client->request('POST', '/tasks/edit/2');
+        $form = $crawler->selectButton("Modifier")->form();
+        $form['task[title]'] = "titre";
+        $client->submit($form);
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful($message = 'Superbe ! La tâche a bien été modifiée.
+');
+
+    }
+
+
+    public function testEditActionWhenNoConnected()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/tasks/edit/2');
+        $this->assertResponseStatusCodeSame(302);
+        $this->assertResponseRedirects('/tasks');
+    }
+
+    public function testDeleteTaskActionWhenNoConnected()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/tasks/delete/2');
+        $this->assertResponseStatusCodeSame(302);
+        $this->assertResponseRedirects('/login');
+    }
+
+    public function testCreateActionWhenNoConneted()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('POST', '/tasks/create');
+        $form = $crawler->selectButton("Ajouter")->form();
+        $form['task[title]'] = "titre";
+        $form['task[content]'] = "jrzjoghjlrzg lijrbgjo zrgj ojrzgh ojzrbg mojzrgjzr gkojrz bglkjzrbg lkjzrbgkljz";
+        $client->submit($form);
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful($message = 'Superbe ! La tâche a été bien été ajoutée.');
+    }
 }

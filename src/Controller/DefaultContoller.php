@@ -13,6 +13,7 @@ class DefaultContoller extends AbstractController
 
     /**
      * @Route("/", name="app_homePage")
+     * @codeCoverageIgnore
      */
     public function index():Response
     {
