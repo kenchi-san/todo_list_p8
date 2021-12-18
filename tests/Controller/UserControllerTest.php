@@ -5,8 +5,6 @@ namespace App\Tests\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
@@ -35,6 +33,7 @@ class UserControllerTest extends WebTestCase
          * @var UserRepository
          */
         $user = $userRepository->findAll();
+
         self::assertCount(6, $user);
     }
 

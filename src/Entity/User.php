@@ -28,6 +28,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
      */
     private ?int $id;
 
@@ -57,7 +58,10 @@ class User implements UserInterface
      */
     private $tasks;
 
-
+    /**
+     * @return int|null
+     * @codeCoverageIgnore
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +123,7 @@ class User implements UserInterface
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *
      * @see UserInterface
+     * @codeCoverageIgnore
      */
     public function getSalt(): ?string
     {
@@ -127,6 +132,7 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @codeCoverageIgnore
      */
     public function eraseCredentials()
     {

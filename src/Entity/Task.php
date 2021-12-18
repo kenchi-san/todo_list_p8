@@ -48,6 +48,10 @@ class Task
      */
     private ?User $user;
 
+    /**
+     * @return int|null
+     * @codeCoverageIgnore
+     */
     public function getId(): ?int
     {
         return $this->id;
