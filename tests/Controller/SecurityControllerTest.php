@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
