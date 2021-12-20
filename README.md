@@ -35,6 +35,8 @@ Load fixtures before launch tests.
 
 ```
 php bin/phpunit --testdox
+or
+php ./vendor/bin/phpunit tests --coverage-html coverage
 ```
 
 ## Load Fixtures
