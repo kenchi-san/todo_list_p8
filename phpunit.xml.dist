@@ -27,16 +27,30 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">src/Form</directory>
+            <directory suffix=".php">src/Repository</directory>
+            <directory suffix=".php">src/Security</directory>
+            <directory suffix=".php">src/Kernel.php</directory>
+            <directory suffix=".php">src/DataFixtures</directory>
+
+
+
+            <file>src/autoload.php</file>
+
+        </exclude>
     </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-    </listeners>
+        <listener class="Symfony\Bridge\PhpUnit\CoverageListener" />
 
-    <!-- Run `composer require symfony/panther` before enabling this extension -->
-    <!--
+    </listeners>
+<!--    <logging>-->
+<!--        <log type="coverage-html" target="build/coverage" lowUpperBound="35" highLowerBound="70"/>-->
+<!--    </logging>-->
     <extensions>
-        <extension class="Symfony\Component\Panther\ServerExtension" />
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
     </extensions>
-    -->
+
 </phpunit>

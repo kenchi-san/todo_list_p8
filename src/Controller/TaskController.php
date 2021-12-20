@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Task;
-use App\Repository\TaskRepository;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +16,7 @@ class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="app_task_list")
+     *
      */
     public function listAction(TaskRepository $repository): Response
     {
@@ -24,18 +27,21 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="app_task_create")
      */
-    public function createAction(Request $request)
+    public function createAction(UserRepository $repository, Request $request, EntityManagerInterface $manager)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
-
+        if ($this->getUser()) {
+            $task->setUser($this->getUser());
+        } else {
+            $noUser = $repository->findOneBy(["userName" => "anonymous"]);
+            $task->setUser($noUser);
+        }
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
 
-            $em->persist($task);
-            $em->flush();
+            $manager->persist($task);
+            $manager->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
@@ -53,6 +59,13 @@ class TaskController extends AbstractController
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
+        try {
+            $this->denyAccessUnlessGranted('TASK_EDIT', $task);
+        }
+      catch (\Exception $e){
+            $this->addFlash('error','acces interdit');
+          return $this->redirectToRoute('app_task_list');
+      }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
@@ -82,15 +95,15 @@ class TaskController extends AbstractController
         } else {
             $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
         }
-
         return $this->redirectToRoute('app_task_list');
     }
 
     /**
      * @Route("/tasks/delete/{id}", name="app_task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task): Response
     {
+        $this->denyAccessUnlessGranted('TASK_EDIT', $task);
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();

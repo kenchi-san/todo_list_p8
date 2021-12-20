@@ -1,19 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+
 
     {{ form_start(form) }}
-    {% if error %}
-        {{ error }}
-    {% endif %}
     <fieldset>
+
         <legend>Connexion</legend>
-        {{ form_row(form.username, {label: 'nom d\'utilisateur'}) }}
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Oops !</strong> {{ error }}
+        </div>
+        {% endif %}
+        {{ form_row(form.userName, {label: 'nom d\'utilisateur'}) }}
         {{ form_row(form.password, {label: 'mot de passe'}) }}
-        <input type="submit" value="Valider ">
+        <input type="submit"class="btn-primary" value="Connexion">
         <br>
 
     </fieldset>
