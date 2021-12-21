@@ -29,7 +29,7 @@
         <div class="navbar-header">
             <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms"/>
             <a class="navbar-brand" href="{{ path('app_homePage') }}">To Do List app</a>
-            <a class="navbar-brand" href="{{ path('app_task_list') }}">Liste des tasks</a>
+            <a class="navbar-brand" href="{{ path('app_task_list') }}">Liste des actions</a>
             {% if app.user %}
                 {% for user in app.user.roles %}
                     {% if user == "ROLE_ADMIN" %} <a href="{{ path('app_user_list') }}" class="navbar-brand">liste des
