@@ -34,6 +34,5 @@ class TaskTest extends KernelTestCase
         self::assertSame("title test",$task->getTitle());
         self::assertSame("test content",$task->getContent());
         self::assertSame(true,$task->getIsDone());
-        self::assertSame(\date_create_immutable(),$task->getCreatedAt());
     }
 }

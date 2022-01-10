@@ -1,5 +1,5 @@
 # todo_list_p8
-
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf80707d107744ce9409da06fcca8005)](https://www.codacy.com/gh/kenchi-san/todo_list_p8/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kenchi-san/todo_list_p8&amp;utm_campaign=Badge_Grade)
 ## Installation
 
 Clone repository and install dependencies
